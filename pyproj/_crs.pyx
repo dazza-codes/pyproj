@@ -329,7 +329,7 @@ cdef class Base:
         if self.context != NULL:
             proj_context_destroy(self.context)
 
-    def _set_base_info(self):
+    cdef _set_base_info(self):
         """
         Set the name of the PJ
         """
