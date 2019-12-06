@@ -1,10 +1,13 @@
 from array import array
+from typing import Tuple, Union
 
 
-def _copytobuffer_return_scalar(x):
+def _copytobuffer_return_scalar(
+    xx: Union[int, float]
+) -> Tuple[array, bool, bool, bool]:
     try:
         # inx,isfloat,islist,istuple
-        return array("d", (float(x),)), True, False, False
+        return array("d", (float(xx),)), True, False, False
     except Exception:
         raise TypeError("input must be an array, list, tuple or scalar")
 
