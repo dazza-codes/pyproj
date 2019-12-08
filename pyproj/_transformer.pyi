@@ -1,4 +1,3 @@
-from array import array
 from typing import Iterable, List, NamedTuple, Union
 
 from pyproj._crs import _CRS, AreaOfUse, Base, CoordinateOperation
@@ -57,10 +56,10 @@ class _Transformer(Base):
     def from_pipeline(proj_pipeline: str) -> _Transformer: ...
     def _transform(
         self,
-        inx: array,
-        iny: array,
-        inz: Union[None, array],
-        intime: Union[None, array],
+        inx: Union[Iterable[float], float],
+        iny: Union[Iterable[float], float],
+        inz: Union[None, Iterable[float], float],
+        intime: Union[None, Iterable[float], float],
         direction: Union[str, TransformDirection],
         radians: bool,
         errcheck: bool,
@@ -68,7 +67,7 @@ class _Transformer(Base):
     def _transform_sequence(
         self,
         stride: int,
-        inseq: Iterable,
+        inseq: Union[Iterable[float], float],
         switch: bool,
         direction: Union[str, TransformDirection],
         time_3rd: bool,

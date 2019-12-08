@@ -1,7 +1,5 @@
-from array import array
-from typing import Any, Iterable, List, Tuple, Union
+from typing import Any, Iterable, Union
 
-AnyArrayOrScalar = Union[Iterable, List, Tuple, float, int, array]
 proj_version_str: str
 
 class Proj:
@@ -12,11 +10,17 @@ class Proj:
     @property
     def has_inverse(self) -> bool: ...
     def _fwd(
-        self, lons: AnyArrayOrScalar, lats: AnyArrayOrScalar, errcheck: bool = False
-    ) -> AnyArrayOrScalar: ...
+        self,
+        lons: Union[Iterable[float], float],
+        lats: Union[Iterable[float], float],
+        errcheck: bool = False,
+    ) -> None: ...
     def _inv(
-        self, x: AnyArrayOrScalar, y: AnyArrayOrScalar, errcheck: bool = False
-    ) -> AnyArrayOrScalar: ...
+        self,
+        x: Union[Iterable[float], float],
+        y: Union[Iterable[float], float],
+        errcheck: bool = False,
+    ) -> None: ...
     def __repr__(self) -> str: ...
     def _is_equivalent(self, other: Proj) -> bool: ...
     def is_exact_same(self, other: Any) -> bool: ...
