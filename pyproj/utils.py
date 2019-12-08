@@ -1,10 +1,8 @@
 from array import array
-from typing import Tuple, Union
+from typing import Iterable, Tuple, Union
 
 
-def _copytobuffer_return_scalar(
-    xx: Union[int, float]
-) -> Tuple[array, bool, bool, bool]:
+def _copytobuffer_return_scalar(xx: float) -> Tuple[array, bool, bool, bool]:
     try:
         # inx,isfloat,islist,istuple
         return array("d", (float(xx),)), True, False, False
@@ -12,7 +10,7 @@ def _copytobuffer_return_scalar(
         raise TypeError("input must be an array, list, tuple or scalar")
 
 
-def _copytobuffer(x):
+def _copytobuffer(xx: Union[Iterable[float], float]) -> Tuple[array, bool, bool, bool]:
     """
     return a copy of x as an object that supports the python Buffer
     API (python array if input is float, list or tuple, numpy array
@@ -26,52 +24,54 @@ def _copytobuffer(x):
     istuple = False
     # first, if it's a numpy array scalar convert to float
     # (array scalars don't support buffer API)
-    if hasattr(x, "shape"):
-        if x.shape == ():
-            return _copytobuffer_return_scalar(x)
+    if hasattr(xx, "shape"):
+        if xx.shape == ():
+            return _copytobuffer_return_scalar(xx)
         else:
             try:
                 # typecast numpy arrays to double.
                 # (this makes a copy - which is crucial
                 #  since buffer is modified in place)
-                x.dtype.char
+                xx.dtype.char
                 # Basemap issue
                 # https://github.com/matplotlib/basemap/pull/223/files
                 # (deal with input array in fortran order)
-                inx = x.copy(order="C").astype("d")
+                inx = xx.copy(order="C").astype("d")
                 # inx,isfloat,islist,istuple
                 return inx, False, False, False
             except Exception:
                 try:  # perhaps they are Numeric/numarrays?
                     # sorry, not tested yet.
                     # i don't know Numeric/numarrays has `shape'.
-                    x.typecode()
-                    inx = x.astype("d")
+                    xx.typecode()
+                    inx = xx.astype("d")
                     # inx,isfloat,islist,istuple
                     return inx, False, False, False
                 except Exception:
                     raise TypeError("input must be an array, list, tuple or scalar")
     else:
         # perhaps they are regular python arrays?
-        if hasattr(x, "typecode"):
-            # x.typecode
-            inx = array("d", x)
+        if hasattr(xx, "typecode"):
+            # xx.typecode
+            inx = array("d", xx)
         # try to convert to python array
         # a list.
-        elif type(x) == list:
-            inx = array("d", x)
+        elif type(xx) == list:
+            inx = array("d", xx)
             islist = True
         # a tuple.
-        elif type(x) == tuple:
-            inx = array("d", x)
+        elif type(xx) == tuple:
+            inx = array("d", xx)
             istuple = True
         # a scalar?
         else:
-            return _copytobuffer_return_scalar(x)
+            return _copytobuffer_return_scalar(xx)
     return inx, isfloat, islist, istuple
 
 
-def _convertback(isfloat, islist, istuple, inx):
+def _convertback(
+    isfloat: bool, islist: bool, istuple: bool, inx: array
+) -> Union[Iterable[float], float]:
     # if inputs were lists, tuples or floats, convert back to original type.
     if isfloat:
         return inx[0]
