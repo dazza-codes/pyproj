@@ -1,8 +1,13 @@
 from array import array
-from typing import Iterable, Tuple, Union
+from typing import Any, Tuple
 
 
-def _copytobuffer_return_scalar(xx: float) -> Tuple[array, bool, bool, bool]:
+def _copytobuffer_return_scalar(xx: Any) -> Tuple[array, bool, bool, bool]:
+    """
+    Parameters
+    -----------
+    xx: float or 0-d numpy array
+    """
     try:
         # inx,isfloat,islist,istuple
         return array("d", (float(xx),)), True, False, False
@@ -10,9 +15,9 @@ def _copytobuffer_return_scalar(xx: float) -> Tuple[array, bool, bool, bool]:
         raise TypeError("input must be an array, list, tuple or scalar")
 
 
-def _copytobuffer(xx: Union[Iterable[float], float]) -> Tuple[array, bool, bool, bool]:
+def _copytobuffer(xx: Any) -> Tuple[array, bool, bool, bool]:
     """
-    return a copy of x as an object that supports the python Buffer
+    return a copy of xx as an object that supports the python Buffer
     API (python array if input is float, list or tuple, numpy array
     if input is a numpy array). returns copyofx, isfloat, islist,
     istuple (islist is True if input is a list, istuple is true if
@@ -69,9 +74,7 @@ def _copytobuffer(xx: Union[Iterable[float], float]) -> Tuple[array, bool, bool,
     return inx, isfloat, islist, istuple
 
 
-def _convertback(
-    isfloat: bool, islist: bool, istuple: bool, inx: array
-) -> Union[Iterable[float], float]:
+def _convertback(isfloat: bool, islist: bool, istuple: bool, inx: Any) -> Any:
     # if inputs were lists, tuples or floats, convert back to original type.
     if isfloat:
         return inx[0]

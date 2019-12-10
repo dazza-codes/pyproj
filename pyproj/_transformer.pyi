@@ -19,7 +19,7 @@ class _TransformerGroup:
         crs_to: _CRS,
         skip_equivalent: bool = False,
         always_xy: bool = False,
-        area_of_interest: Union[None, AreaOfInterest] = None,
+        area_of_interest: Union[AreaOfInterest, None] = None,
     ) -> None: ...
 
 class _Transformer(Base):
@@ -43,14 +43,14 @@ class _Transformer(Base):
     @property
     def area_of_use(self) -> AreaOfUse: ...
     @property
-    def operations(self) -> Union[None, List[CoordinateOperation]]: ...
+    def operations(self) -> Union[List[CoordinateOperation], None]: ...
     @staticmethod
     def from_crs(
         crs_from: _CRS,
         crs_to: _CRS,
         skip_equivalent: bool = False,
         always_xy: bool = False,
-        area_of_interest: Union[None, AreaOfInterest] = None,
+        area_of_interest: Union[AreaOfInterest, None] = None,
     ) -> _Transformer: ...
     @staticmethod
     def from_pipeline(proj_pipeline: str) -> _Transformer: ...
@@ -58,18 +58,18 @@ class _Transformer(Base):
         self,
         inx: Union[Iterable[float], float],
         iny: Union[Iterable[float], float],
-        inz: Union[None, Iterable[float], float],
-        intime: Union[None, Iterable[float], float],
-        direction: Union[str, TransformDirection],
+        inz: Union[Iterable[float], float, None],
+        intime: Union[Iterable[float], float, None],
+        direction: Union[TransformDirection, str],
         radians: bool,
         errcheck: bool,
     ) -> None: ...
     def _transform_sequence(
         self,
         stride: int,
-        inseq: Union[Iterable[float], float],
+        inseq: Iterable[Iterable[float]],
         switch: bool,
-        direction: Union[str, TransformDirection],
+        direction: Union[TransformDirection, str],
         time_3rd: bool,
         radians: bool,
         errcheck: bool,
