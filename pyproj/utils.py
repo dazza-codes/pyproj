@@ -15,7 +15,7 @@ def _copytobuffer_return_scalar(xx: Any) -> Tuple[array, bool, bool, bool]:
         raise TypeError("input must be an array, list, tuple or scalar")
 
 
-def _copytobuffer(xx: Any) -> Tuple[array, bool, bool, bool]:
+def _copytobuffer(xx: Any) -> Tuple[Any, bool, bool, bool]:
     """
     return a copy of xx as an object that supports the python Buffer
     API (python array if input is float, list or tuple, numpy array

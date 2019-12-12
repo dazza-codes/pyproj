@@ -1,7 +1,8 @@
-from typing import Iterable, List, NamedTuple, Union
+from typing import Any, Iterable, List, NamedTuple, Union
 
 from pyproj._crs import _CRS, AreaOfUse, Base, CoordinateOperation
 from pyproj.enums import TransformDirection
+from pyproj.transformer import Transformer
 
 class AreaOfInterest(NamedTuple):
     west_lon_degree: float
@@ -10,7 +11,7 @@ class AreaOfInterest(NamedTuple):
     north_lat_degree: float
 
 class _TransformerGroup:
-    _transformers: List[_Transformer]
+    _transformers: List[Union[_Transformer, Transformer]]
     _unavailable_operations: List[CoordinateOperation]
     _best_available: bool
     def __init__(
@@ -56,10 +57,10 @@ class _Transformer(Base):
     def from_pipeline(proj_pipeline: str) -> _Transformer: ...
     def _transform(
         self,
-        inx: Union[Iterable[float], float],
-        iny: Union[Iterable[float], float],
-        inz: Union[Iterable[float], float, None],
-        intime: Union[Iterable[float], float, None],
+        inx: Any,
+        iny: Any,
+        inz: Any,
+        intime: Any,
         direction: Union[TransformDirection, str],
         radians: bool,
         errcheck: bool,

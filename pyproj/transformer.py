@@ -26,7 +26,7 @@ __all__ = [
 ]
 from array import array
 from itertools import chain, islice
-from typing import Iterable, Iterator, List, Tuple, Union
+from typing import Any, Iterable, Iterator, List, Optional, Tuple, Union
 
 from pyproj import CRS, Proj
 from pyproj._crs import AreaOfUse, CoordinateOperation
@@ -59,7 +59,7 @@ class TransformerGroup(_TransformerGroup):
         crs_to,
         skip_equivalent: bool = False,
         always_xy: bool = False,
-        area_of_interest: bool = None,
+        area_of_interest: Optional[AreaOfInterest] = None,
     ) -> None:
         """Get all possible transformations from a :obj:`~pyproj.crs.CRS`
         or input used to create one.
@@ -152,7 +152,7 @@ class Transformer:
 
     """
 
-    def __init__(self, base_transformer: Union[_Transformer, None] = None):
+    def __init__(self, base_transformer: Optional[_Transformer] = None):
         if not isinstance(base_transformer, _Transformer):
             ProjError.clear()
             raise ProjError(
@@ -240,7 +240,7 @@ class Transformer:
         proj_to,
         skip_equivalent: bool = False,
         always_xy: bool = False,
-        area_of_interest: Union[AreaOfInterest, None] = None,
+        area_of_interest: Optional[AreaOfInterest] = None,
     ) -> Transformer:
         """Make a Transformer from a :obj:`~pyproj.proj.Proj` or input used to create one.
 
@@ -289,7 +289,7 @@ class Transformer:
         crs_to,
         skip_equivalent: bool = False,
         always_xy: bool = False,
-        area_of_interest: Union[AreaOfInterest, None] = None,
+        area_of_interest: Optional[AreaOfInterest] = None,
     ) -> Transformer:
         """Make a Transformer from a :obj:`~pyproj.crs.CRS` or input used to create one.
 
@@ -349,14 +349,14 @@ class Transformer:
 
     def transform(
         self,
-        xx: Union[Iterable[float], float],
-        yy: Union[Iterable[float], float],
-        zz: Union[Iterable[float], float, None] = None,
-        tt: Union[Iterable[float], float, None] = None,
+        xx: Any,
+        yy: Any,
+        zz: Any = None,
+        tt: Any = None,
         radians: bool = False,
         errcheck: bool = False,
         direction: Union[TransformDirection, str] = TransformDirection.FORWARD,
-    ) -> Tuple[Union[Iterable[float], float]]:
+    ) -> Union[Tuple[Any, Any], Tuple[Any, Any, Any], Tuple[Any, Any, Any, Any]]:
         """
         Transform points between two coordinate systems.
 
@@ -461,7 +461,7 @@ class Transformer:
 
     def itransform(
         self,
-        points: Iterable[Iterable],
+        points: Any,
         switch: bool = False,
         time_3rd: bool = False,
         radians: bool = False,
@@ -664,10 +664,10 @@ class Transformer:
 def transform(
     p1,
     p2,
-    x: Union[Iterable[float], float],
-    y: Union[Iterable[float], float],
-    z: Union[Iterable[float], float, None] = None,
-    tt: Union[Iterable[float], float, None] = None,
+    x: Any,
+    y: Any,
+    z: Any = None,
+    tt: Any = None,
     radians: bool = False,
     errcheck: bool = False,
     skip_equivalent: bool = False,
